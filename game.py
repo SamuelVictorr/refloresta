@@ -26,26 +26,51 @@ playersize = [20, 20]
 playerpos = [0, 0]
 
 chao = pygame.Rect(10,340,500,5)
-bloco = pygame.Rect(10,300,50,50)
+bloco = pygame.Rect(40,300,50,50)
+bloco2 = pygame.Rect(200,150,50,50)
+bloco3 = pygame.Rect(350,150,50,50)
+objetos = [chao,bloco,bloco2,bloco3]
+        
 #Atualizar o movimento
+colisions =[False,False,False,False] #Top bottom left right
 def move(dx, dy):   
-    playerpos[1] += dy
-    player = pygame.Rect((playerpos[0], playerpos[1], playersize[0], playersize[1]))
-    if player.colliderect(chao):
-        if dy > 0:
-            player.bottom = chao.top + 1
-            playerpos[1] = player.top
-
-    playerpos[0] += dx
-    player = pygame.Rect((playerpos[0], playerpos[1], playersize[0], playersize[1]))
-    if player.colliderect(chao) and player.bottom != chao.top + 1:
-        if dx > 0:
-            player.right = chao.left
-            playerpos[0] = player.left
-        if dx < 0:
-            player.left = chao.right
-            playerpos[0] = player.left
+    global colisions
+    for ojeto in objetos:
+        playerpos[1] += dy
+        player = pygame.Rect((playerpos[0], playerpos[1], playersize[0], playersize[1]))
+        if player.collidelist(objetos) != -1:
+            if dy > 0:
+                colisions[0] = True
+                player.bottom = objetos[player.collidelist(objetos)].top + 1
+                playerpos[1] = player.top
+            if dy < 0:
+                colisions[1] = True
+                player.top = objetos[player.collidelist(objetos)].bottom - 1
+                playerpos[1] = player.top
             
+
+        for ob in objetos:
+            if player.bottom == ob.top:
+                print('topo')
+            else:
+                print('não topo')
+            
+        playerpos[0] += dx
+        player = pygame.Rect((playerpos[0], playerpos[1], playersize[0], playersize[1]))
+        for colision in list(player.collidelistall(objetos)):
+            if player.collidelist(objetos) != -1 and player.bottom != objetos[colision].top + 1:
+                if dx > 0:
+                    colisions[2] = True
+                    player.right = objetos[colision].left
+                    playerpos[0] = player.left
+                if dx < 0:
+                    colisions[3] = True
+                    player.left = objetos[colision].right
+                    playerpos[0] = player.left
+        if dx == 0:
+            colisions[2],colisions[3] = False,False
+                    
+
 # game loop 
 while running: 
     TELA.fill(BACKGROUND_COLOR) #Clear the screen
@@ -64,14 +89,13 @@ while running:
     x_speed = (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * SPEED
     
     player = pygame.Rect((playerpos[0], playerpos[1], playersize[0], playersize[1]))
-    if player.colliderect(chao):
-        print('colidiu')
+    if player.collidelist(objetos) != -1:
         if keys[pygame.K_SPACE]:
-            y_speed = -10
+            y_speed = -8
         else:
             y_speed = 0
             
-    if not player.colliderect(chao):
+    if player.collidelist(objetos) == -1:
         y_speed += GRAVIDADE
     
     move(x_speed,y_speed)
@@ -79,8 +103,8 @@ while running:
     pygame.draw.rect(TELA,(255,255,0),(playerpos[0], playerpos[1], playersize[0], playersize[1]))
     
     #chão
-    pygame.draw.rect(TELA,(255,255,255),chao)
-    pygame.draw.rect(TELA,(255,255,255),bloco)
+    for i in objetos:
+        pygame.draw.rect(TELA,(255,255,255),i)
     
     pygame.display.flip() 
     
