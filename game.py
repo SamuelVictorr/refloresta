@@ -30,21 +30,16 @@ chao = pygame.Rect(10,340,500,5)
 bloco = pygame.Rect(40,300,50,50)
 bloco2 = pygame.Rect(200,150,50,50)
 bloco3 = pygame.Rect(350,150,50,50)
-objetos = [chao,bloco,bloco2,bloco3]
-lixo1 = pygame.Rect(230, 330, 10, 10) #lixo bloco
-lixo2 = pygame.Rect(250, 330, 10, 10)
-lixos = [lixo1, lixo2]
-
-# music loop
-pygame.mixer.init()        
-pygame.mixer.music.load("somteste.mp3") #Test music
-pygame.mixer.music.play(-1) #Music in loop
-        
 bloco4 = pygame.Rect(10, 100, 100, 20)
 lixo1 = pygame.Rect(230, 330, 10, 10) #lixo bloco
 lixo2 = pygame.Rect(250, 330, 10, 10)
 objetos = [chao,bloco,bloco2,bloco3,bloco4]
 lixos = [lixo1, lixo2]  #colisão de lixo
+
+# music loop
+pygame.mixer.init()        
+pygame.mixer.music.load("somteste.mp3") #Test music
+pygame.mixer.music.play(-1) #Music in loop
 
 #Atualizar o movimento
 colisions =[False,False,False,False] #Top bottom left right
