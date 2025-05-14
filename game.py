@@ -69,7 +69,17 @@ def move(dx, dy):
                     playerpos[0] = player.left
         if dx == 0:
             colisions[2],colisions[3] = False,False
-                    
+
+idle_spritesheet = pygame.image.load(r"assets\player\Idle.png")
+#width 128
+#height 64
+def load_sprite_sheet(sheet, frame_width, frame_height):
+    sheet_rect = sheet.get_rect()
+    frames = []
+    for i in range(sheet_rect.width // frame_width):
+        frame = sheet.subsurface((i * frame_width, 0, frame_width, frame_height))
+        frames.append(frame)
+    return frames
 
 # game loop 
 while running: 
