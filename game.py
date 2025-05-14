@@ -8,7 +8,7 @@ LARGURA = 640
 SPEED = 2
 GRAVIDADE = 0.5
 TELA = pygame.display.set_mode((LARGURA, ALTURA),flags=pygame.SCALED)
- 
+
 x_speed = 0
 y_speed = 0
 dx=0
@@ -25,6 +25,7 @@ running = True
 playersize = [20, 20]
 playerpos = [0, 0]
 
+# esquerda, topo, altura, largura
 chao = pygame.Rect(10,340,500,5)
 bloco = pygame.Rect(40,300,50,50)
 bloco2 = pygame.Rect(200,150,50,50)
@@ -39,6 +40,12 @@ pygame.mixer.init()
 pygame.mixer.music.load("somteste.mp3") #Test music
 pygame.mixer.music.play(-1) #Music in loop
         
+bloco4 = pygame.Rect(10, 100, 100, 20)
+lixo1 = pygame.Rect(230, 330, 10, 10) #lixo bloco
+lixo2 = pygame.Rect(250, 330, 10, 10)
+objetos = [chao,bloco,bloco2,bloco3,bloco4]
+lixos = [lixo1, lixo2]  #colisão de lixo
+
 #Atualizar o movimento
 colisions =[False,False,False,False] #Top bottom left right
 def move(dx, dy):   
@@ -54,8 +61,7 @@ def move(dx, dy):
             if dy < 0:
                 colisions[1] = True
                 player.top = objetos[player.collidelist(objetos)].bottom - 1
-                playerpos[1] = player.top
-            
+                playerpos[1] = player.top  
 
         for ob in objetos:
             if player.bottom == ob.top:
@@ -77,8 +83,7 @@ def move(dx, dy):
                     playerpos[0] = player.left
         if dx == 0:
             colisions[2],colisions[3] = False,False
-                    
-
+                        
 # game loop 
 while running: 
     TELA.fill(BACKGROUND_COLOR) #Clear the screen
@@ -110,10 +115,26 @@ while running:
     #Player
     pygame.draw.rect(TELA,(255,255,0),(playerpos[0], playerpos[1], playersize[0], playersize[1]))
     
+    cor_lixo = (255, 200, 200)
+    
     #chão
     for i in objetos:
         pygame.draw.rect(TELA,(255,255,255),i)
     
+    for i in lixos:
+        if player.collidelistall(lixos) != -1:
+            pygame.draw.rect(TELA, (255, 100, 100), i)
+        else:
+            pygame.draw.rect(TELA, (cor_lixo), i)
+    
+    """if player.collidelistall(lixos) != -1:
+        pygame.draw.rect(TELA, (255, 100, 100), lixo1)
+        pygame.draw.rect(TELA, (255, 50, 50), lixo2)
+    else:
+        pygame.draw.rect(TELA, (cor_lixo), lixo1)
+        pygame.draw.rect(TELA,(cor_lixo), lixo2)"""
+    
     pygame.display.flip() 
+    
     
     relogio.tick(60)
